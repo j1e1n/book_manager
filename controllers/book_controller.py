@@ -1,7 +1,9 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, request
 from flask import Blueprint 
 books_blueprint = Blueprint("books", __name__)
 from repositories import book_repository
+from repositories import author_repository
+from models.book import Book
 
 
 @books_blueprint.route('/books', methods=['GET'])
@@ -21,3 +23,20 @@ def show_book(id):
     book = book_repository.select(id)
     return render_template("books/show.html", book=book)
 
+
+@books_blueprint.route('/books/new', methods = ['GET'])
+def new_book():
+    authors = author_repository.select_all()
+    return render_template("books/new.html", all_authors = authors)
+
+
+@books_blueprint.route('/books', methods=['POST'])
+def create_book():
+    title = request.form['book-title']
+    author_id = request.form['author']
+    genre = request.form['genre']
+    publisher = request.form['publisher']
+    author = author_repository.select(author_id)
+    book = Book(title, genre, publisher, author)
+    book_repository.save(book)
+    return redirect('/books')

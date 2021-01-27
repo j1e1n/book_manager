@@ -9,7 +9,13 @@
     <hr>
 
     <form action="/books/{{book.id}}/delete" method="POST">
-        <button type="delete">DELETE</button>
+        <button type="button">DELETE</button>
+        <br>
     </form>
+
+    
+    <a href="/books/{{book.id}}/edit">Edit</a>
+
+   
 
 {% endblock %}
